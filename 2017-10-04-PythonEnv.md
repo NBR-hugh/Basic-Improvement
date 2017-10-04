@@ -30,9 +30,12 @@
 ### 2 pip + pyenv + virtualenv
 
 
+## doing
 
+- 实验 Python Environment Workflow
+    + [My Python Environment Workflow with Conda - tdhopper.com](https://tdhopper.com/blog/2015/Nov/24/my-python-environment-workflow-with-conda/)
 
 
 ## TimeLog
 
-- 071004 20m |
+- 071004 20m 初探
