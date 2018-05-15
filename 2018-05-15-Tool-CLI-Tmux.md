@@ -1,0 +1,196 @@
+# Tmux
+
+
+## 缘起
+
+~ 希望重启保存页面布局,而不用每次关机都要排窗口
+~ 查看大妈的工具箱,决定探索一下 tmux
+~ 发现 Iterm2 能够实现同样的功能,小纠结应该依赖哪一个
+~ 鉴于 tmux 统一层级管理 / 后台运行 / 远程功能的优势, 且文字复制可用,决定以 tmux 为主
+
+- 实现目标
+    - 三步操作内快速进入原有的项目窗口布局
+    - 光机/关闭 命令行业依然能记忆布局,重新进入
+
+## 纠结
+
+- Q Iterm 记忆布局设置
+    - => [tmux in practice: iTerm2 and tmux – freeCodeCamp](https://medium.freecodecamp.org/tmux-in-practice-iterm2-and-tmux-integration-7fb0991c6c01)
+    - 这篇文章建议保持 tmux 的使用,将 Iterm2 作为 tmux 的隧道
+        - tmux 的优势
+        - 可以保持后端自动运行
+        - 层级清晰明显,统一管理
+            - server
+            - session
+            - window
+            - pane
+        * 方便结对编程
+    - tmux 的劣势
+        - 无法使用 Iterm2 的文本自动复制功能
+            + => 重新启动 Iterm2 后莫名奇妙可以使用点击复制功能...
+                + => [macos - How to copy to system clipboard from tmux output after mouse selection? - Stack Overflow](https://stackoverflow.com/questions/12287432/how-to-copy-to-system-clipboard-from-tmux-output-after-mouse-selection)
+                + O 按住 option 就可以复制
+        * 无法预先布置命令
+- => [TomAnthony/itermocil: Create pre-defined window/pane layouts and run commands in iTerm](https://github.com/TomAnthony/itermocil)
+- Iterm layout 的增强版本,可以预先设置布局与运行的命令
+- I 两种方案可进行选择 
+    - Tmux 
+    - Iterm2 layout + itermocil 欲命令读取
+O 还是选择使用 Tmux, 进一步寻找解决复制问题的办法
+## Ref
+
+- [Tmux配置指南 | 沈浪的寻蟒之旅](https://xpgeng.gitbooks.io/omooc2py/content/guide/Tmux-Guide.html)
+- [效率为王：终端管理工具 Tmux](http://gitbook.cn/books/5a362ddc2edf834ef46b6415/index.html)
+- [tmux - congbo - 博客园](https://www.cnblogs.com/congbo/archive/2012/08/30/2649420.html)
+
+## 理解
+
+- > tmux 本质上可以说是一个服务器，当 tmux 命令运行的时候，后台运行了一个 tmux 服务，并启动一个会话，会话和服务器之间通过 Unix socket 来通信。
+- > 注意当服务器重启之后，tmux 的会话信息会丢失。要持久化保存 tmux 会话信息，在本文的 tmux 插件部分会介绍一款简单易用的插件 tmux-resurrect
+- > 通过将终端会话置于后台运行，在需要时按需接入，以及将会话共享给其他人，是远程办公和结对编程的利器。
+- > 会话+窗口+面板的组合是提升我们工作效率的一个强力组合。一个推荐的使用方法为对不同的项目建立不通的会话，使用窗口来分割一个项目里面的不同工作内容，然后使用面板来适用大屏开发
+
+## 安装
+
+- `brew install tmux`
+
+## 术语
+
+- server 服务器(tmux) tumx
+    - has session 会话 
+        -has  window 窗口
+            -has pane 面板
+
+## 默认命令
+
+- prefix: `ctrl + b`
+- `prefix + c` 创建新窗口
+- `prefix + n` 窗口跳转
+- `tmux ls` 显示所有会话
+- `tmux new -s session_name` 重命名会话/创建
+- `prefix + d` 脱离会话
+- `prefix + s` + `方向键`  快速切换会话
+- `prefix + $` 重命名当前会话
+- `prefix + :`  命令模式
+- `prefix + ，` 重命名当前窗口
+- `exit` 退出窗口
+    - 卡死=> 强制杀死当前窗口 `prefix +&`
+
+
+- `prefix + d`  脱离会话,回到终端
+    - 方便在在远程主机上启动一个长期运行的tmux 会话
+- `tmux attach` 连接最新创建的会话
+    - `-t $name` 链接命名对话
+        - `tmux a -t learn`
+- `prefix + %` 纵向分隔面板
+- `prefix + "` 横向分隔面板
+- `prefix + o` 不同的面板之间转跳
+    - `prefix + 方向键`
+- `prefix + !` 将面板转化成新窗口
+- `prefix + z` 使当前面板最大化为窗口,并暂时隐藏其他的面板
+- `prefix + x` 强制退出一个面板
+- `tmux kill-server` 删除所有会话
+
+## 配置
+
+- 默认配置文件
+    - 系统级配置文件`/etc/tmux.conf`
+    - 用户级配置文件 `~/.tmux.conf`
+- 打开配置文件
+    - `subl ~/.tmux.conf `
+- 修改 prefix
+- attach 空白,自动新建session
+- 快速重载配置文件
+- 更改默认序号
+- 更改分隔面板的快捷键
+- 更改面板间移动的快捷键
+- 面板大小调整
+- 鼠标模式
+- 状态栏配置
+    - powerline
+        - pip install powerline-status 
+    - 配置
+        - source "{repository_root}/powerline/bindings/tmux/powerline.conf" 
+            - {repository_root}
+                - /Users/NBR-hugh/.local/share/virtualenvs/NBR-hugh-hUsIvz3I/lib/python3.6/site-packages
+
+- 其他配置
+- 命令缩写
+- Debug
+- I `tmux new -s session_name`
+    - X  `sessions should be nested with care, unset $TMUX to force`
+    - S [Create new tmux session from inside a tmux session - Stack Overflow](https://stackoverflow.com/questions/16398850/create-new-tmux-session-from-inside-a-tmux-session)
+        - O 利用命令模式解决
+            - `ctrl-b :new`创建新会话
+            - `ctrl-b s` 选择会话
+- I `pip install powerline-status `
+    - X `zsh: command not found: pip`
+    - `pippipenv install erline-status`
+    - 由于系统原因需要
+
+- 插件管理
+    - 安装:
+        - `git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+`
+    - 配置:
+        - `~/.tmux.conf`
+        ```
+        #tmux 插件列表
+        set -g @plugin 'tmux-plugins/tpm'
+        set -g @plugin 'tmux-plugins/tmux-sensible'
+
+        #将这一行插入.tmux.conf最底部
+        run '~/.tmux/plugins/tpm/tpm
+        ```
+        - `prefix + r` 重载配置
+    - 快捷键
+        - prefix + I 安装插件
+        - prefix + U 更新插件
+        - prefix + alt + u 删除插件
+    - 安装插件实操: 会话保持：tmux-resurrect
+        - 0 : ~/.tmux.conf
+            ```
+            set -g @plugin 'tmux-plugins/tmux-resurrect'
+
+            ```
+        - 1 : prefix + I 安装插件
+        - 2 : 
+    - Debug
+        - X -3T tpm 插件无法使用 
+            - => [tpm/tpm\_not\_working.md at master · tmux-plugins/tpm](https://github.com/tmux-plugins/tpm/blob/master/docs/tpm_not_working.md)
+            - I zsh 插件的问题
+                - 打开~/.zsh 插件
+                -  禁用插件 
+                    - # plugins=(git)
+                - O 成功运行`prefix + control + S`,显示保存成功
+        + X 测试后发现只能保持窗口布局与路径,无法预输入命令
+        + => 方案2: 通过配置文件保持会话的插件
+        + => 方案3: 通过 Iterm 2 + [TomAnthony/itermocil: Create pre-defined window/pane layouts and run commands in iTerm](https://github.com/TomAnthony/itermocil) 可以实现预命令的设置
+        + 
+
+## 日常使用
+
+- 帮助文档
+    - `man tmux`
+
+- Tmux 进入Tmux 选择会话
+    - `tmux ls` 显示所有会话
+    - `prefix s` + 方向键 切换会话
+- 有一个新项目,开一个新 session
+    - 新建一个 session
+    - I `tmux new -s Py104-Ch4-Database`
+        - X sessions should be nested with care, unset $TMUX to force
+        - => [Create new tmux session from inside a tmux session - Stack Overflow](https://stackoverflow.com/questions/16398850/create-new-tmux-session-from-inside-a-tmux-session)
+            - O 采用命令模式创建新会话
+                - `prefix : -s [session-name]`
+    - 重命名一个 session
+        - `prefix + $`
+    - 删除一个 sessiion
+        - `tmux kill-session -t [session-name]`
+
+-  调整面板大小
+
+## TL
+
+- 180512 `8T` NBR-hugh init
+- 180515 `3T` NBR-hugh add plugins: tpm/tmux-resurrect
