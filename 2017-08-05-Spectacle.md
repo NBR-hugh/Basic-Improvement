@@ -7,7 +7,7 @@
 
 ## 下载
 
--  [eczarny/spectacle: Spectacle allows you to organize your windows without using a mouse.](https://github.com/eczarny/spectacle)
+-  [eczarny/ : Spectacle allows you to organize your windows without using a mouse.](https://github.com/eczarny/spectacle)
 
 ## 快捷使用
 
